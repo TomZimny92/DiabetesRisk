@@ -1,29 +1,25 @@
 ﻿@page
 @model DiabetesRisk.Pages.UploadModel
 
-<html>
-<head>
+<html class="justify-content-center">
+<head class="fs-1">
     Upload CSV File
 </head>
-<body>
+<body class="border">
     <form method="post" enctype="multipart/form-data">
 
-        <input type="file" accept=".csv" asp-for="Upload" />
-        <input type="submit" />
+        <input class="form-control mb-1" type="file" accept=".csv" asp-for="Upload" />
+        <input class="btn btn-primary mb-1" type="submit" />
     </form>
 
     @if (Model.UploadSuccessful)
-        {
-@*             @foreach (var patient in Model.PatientRecords)
-            {
-                <p>@patient.Name</p>   
-            } *@
-            <div>Upload Successful!</div>
-        }
-        @if (Model.UploadFailed)
-        {
-            <div>Upload Failed :(</div>
-        }
+    {
+        <div class="fw-bold fst-italic justify-content-center">Upload Successful! <span class="text-success">@Model.PatientRecords.Count</span> records added!</div>
+    }
+    @if (Model.UploadFailed)
+    {
+        <div class="fst-bold fst-italic justify-content-center">Upload Failed :(</div>
+    }
     </body>
 </html>
 

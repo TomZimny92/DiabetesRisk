@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IO;
 using DiabetesRisk.Models;
 using DiabetesRisk.Database;
+using System.Text.RegularExpressions;
 
 namespace DiabetesRisk.Pages
 {
@@ -12,7 +11,8 @@ namespace DiabetesRisk.Pages
         public required IFormFile Upload { get; set; }
         public bool UploadSuccessful { get; set; } = false;
         public bool UploadFailed { get; set; } = false;
-        public List<Patient> PatientRecords { get; set; } = [];
+        public bool UploadPreview { get; set; } = false;
+        public List<Patient> PatientRecords { get; set; } = [];        
 
         public async Task OnPostAsync()
         {
@@ -22,10 +22,6 @@ namespace DiabetesRisk.Pages
             }
 
             PatientRecords.Clear();
-
-            /////////////////////////////////////////
-            // ADD FILE VALIDATION IF THERE'S TIME //
-            /////////////////////////////////////////
 
             using (StreamReader reader = new(Upload.OpenReadStream()))
             {
@@ -37,7 +33,8 @@ namespace DiabetesRisk.Pages
                     while ((record = await reader.ReadLineAsync()) != null)
                     {
                         var fields = record.Split(',');
-                        var patientRecord = CreatePatient(fields);
+                        var sanitizedFields = SanitizeFields(fields);
+                        var patientRecord = CreatePatient(sanitizedFields);
                         if (patientRecord != null)
                         {
                             PatientRecords.Add(patientRecord);
@@ -56,7 +53,6 @@ namespace DiabetesRisk.Pages
 
         public Patient? CreatePatient(string[] fields)
         {
-            Console.WriteLine($"CreatePatient start...");
             try
             {
                 var patient = new Patient
@@ -73,7 +69,7 @@ namespace DiabetesRisk.Pages
                     PhysicalActivityHours = int.Parse(fields[9].Trim()),
                     RiskScore = CalculateRiskScore(fields),
                 };
-                Console.WriteLine($"CreatePatient end, patient.RiskScore: {patient.Name} - {patient.RiskScore}");
+
                 return patient;
             }
             catch (Exception ex)
@@ -83,7 +79,7 @@ namespace DiabetesRisk.Pages
             }
         }
 
-        private int CalculateRiskScore(string[] fields)
+        private static int CalculateRiskScore(string[] fields)
         {
             int score = 0;
 
@@ -91,7 +87,6 @@ namespace DiabetesRisk.Pages
             var glucose = int.Parse(fields[5].Trim());
             var diabetesPedigree = float.Parse(fields[8].Trim());
             var physicalActivityHours = int.Parse(fields[9].Trim());
-            Console.WriteLine($"bmi: {bmi}, glucose: {glucose}, diabetes: {diabetesPedigree}, phys: {physicalActivityHours}");
 
             if (bmi > 30)
             {
@@ -111,6 +106,30 @@ namespace DiabetesRisk.Pages
             }
 
             return score;
+        }
+
+        private static string[] SanitizeFields(string[] fields)
+        {
+            string[] sanitizedFields = [];
+            try
+            {
+                foreach (var field in fields)
+                {
+                    if (field.GetType() == typeof(string))
+                    {
+                        Regex.Replace(field, @"^a-zA-Z0-9", "");
+                        _ = sanitizedFields.Append(field);
+                        continue;
+                    }
+                    _ = sanitizedFields.Append(field);
+                }
+                return sanitizedFields;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Sanitization failed: {ex.Message}");
+                return [];
+            }
         }
     }
 }

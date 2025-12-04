@@ -1,10 +1,5 @@
 ﻿using DiabetesRisk.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace DiabetesRisk.Database
 {
@@ -48,15 +43,14 @@ namespace DiabetesRisk.Database
                         command.Parameters.AddWithValue("@PhysicalActivityHours", patient.PhysicalActivityHours);
                         command.Parameters.AddWithValue("@RiskScore", patient.RiskScore);
 
-                        var inserted = await command.ExecuteNonQueryAsync(); // if 1, display success?
+                        await command.ExecuteNonQueryAsync();
                         command.Parameters.Clear();
-                        Console.WriteLine($"inserted patient: {inserted}");
                     }
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Something went wrong: {ex.Message}");
+                    Console.WriteLine($"Command failed to execute: {ex.Message}");
                     try
                     {
                         transaction.Rollback();
@@ -90,13 +84,11 @@ namespace DiabetesRisk.Database
             try
             {
                 SqlDataReader reader = command.ExecuteReader();
-                Console.WriteLine($"reader.HasRows: {reader.HasRows}");
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        patient = GeneratePatient(reader);
-                        Console.WriteLine($"patient.Name: {patient.Name}");
+                        patient = GeneratePatientToDisplay(reader);
                         patients.Add(patient);
                     }
                 }
@@ -116,11 +108,8 @@ namespace DiabetesRisk.Database
             }
         }
 
-        private static Patient GeneratePatient(SqlDataReader reader)
+        private static Patient GeneratePatientToDisplay(SqlDataReader reader)
         {
-            Console.WriteLine($"reader.FieldCount: {reader.FieldCount}");
-            Console.WriteLine($"reader.Depth: {reader.Depth}");
-
             var generatedPatient = new Patient()
             {
                 Name = reader.GetString(0),

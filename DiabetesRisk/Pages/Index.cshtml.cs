@@ -11,9 +11,7 @@ namespace DiabetesRisk.Pages
         public List<Patient> TopFive = [];
         public async Task OnGet()
         {
-            Console.WriteLine($"OnGet() started...");
             TopFive = await _patientDataService.GetTopPatientsAsync();
-            Console.WriteLine($"OnGet() finished...");
         }
     }
 }
