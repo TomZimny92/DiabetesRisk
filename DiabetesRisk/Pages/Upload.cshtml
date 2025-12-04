@@ -11,6 +11,19 @@
         <input type="file" accept=".csv" asp-for="Upload" />
         <input type="submit" />
     </form>
-</body>
+
+    @if (Model.UploadSuccessful)
+        {
+@*             @foreach (var patient in Model.PatientRecords)
+            {
+                <p>@patient.Name</p>   
+            } *@
+            <div>Upload Successful!</div>
+        }
+        @if (Model.UploadFailed)
+        {
+            <div>Upload Failed :(</div>
+        }
+    </body>
 </html>
 

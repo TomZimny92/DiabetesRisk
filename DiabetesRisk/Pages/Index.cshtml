@@ -2,8 +2,35 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    var rowCount = 1;
 }
 
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Patient Name</th>
+                <th>Diabetes Risk Score</th>
+                <th>Glucose Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model.TopFive)
+            {
+                <tr>
+                    <td>@rowCount</td>
+                    <td>@patient.Name</td>
+                    <td>@patient.RiskScore</td>
+                    <td>@patient.Glucose</td>
+                </tr>
+                rowCount++;
+            }
+        </tbody>
+    </table>
+</div>
+
+@* 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
@@ -11,4 +38,4 @@
 
         <p>Retrieve data using StoreProcudure</p>
     </div>
-</div>
+</div> *@

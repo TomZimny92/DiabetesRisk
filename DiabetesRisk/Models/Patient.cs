@@ -2,15 +2,16 @@
 {
     public class Patient
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public required string Name { get; set; }
-        public int Age { get; set; }
-        public required string Gender { get; set; }
-        public float BMI { get; set; }
+        public int? Age { get; set; }
+        public string? Gender { get; set; }
+        public float? BMI { get; set; }
         public int Glucose { get; set; }
-        public int Insulin { get; set; }
-        public int BloodPressure { get; set; }
-        public float DiabetesPedigree { get; set; }
-        public int PhysicalActivityHours { get; set; }
+        public int? Insulin { get; set; }
+        public int? BloodPressure { get; set; }
+        public float? DiabetesPedigree { get; set; }
+        public int? PhysicalActivityHours { get; set; }
+        public int RiskScore { get; set; }
     }
 }

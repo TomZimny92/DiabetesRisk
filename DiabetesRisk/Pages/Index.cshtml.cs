@@ -1,13 +1,19 @@
+using DiabetesRisk.Database;
+using DiabetesRisk.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DiabetesRisk.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel(PatientDataService pds) : PageModel
     {
-        public void OnGet()
+        private readonly PatientDataService _patientDataService = pds;
+        public List<Patient> TopFive = [];
+        public async Task OnGet()
         {
-
+            Console.WriteLine($"OnGet() started...");
+            TopFive = await _patientDataService.GetTopPatientsAsync();
+            Console.WriteLine($"OnGet() finished...");
         }
     }
 }
