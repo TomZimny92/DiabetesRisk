@@ -7,8 +7,9 @@ namespace DiabetesRisk.Pages
 {
     public class UploadModel : PageModel
     {
+        public required IFormFile Upload { get; set; }
         public List<Patient> PatientRecords { get; set; } = [];
-        public async Task OnPostAsync(IFormFile Upload)
+        public async Task OnPostAsync()
         {
             if (Upload == null || Upload.Length == 0)
             {
@@ -50,11 +51,11 @@ namespace DiabetesRisk.Pages
                     Name = fields[1].Trim(),
                     Age = int.Parse(fields[2].Trim()),
                     Gender = fields[3].Trim(),
-                    BMI = double.Parse(fields[4].Trim()),
+                    BMI = float.Parse(fields[4].Trim()),
                     Glucose = int.Parse(fields[5].Trim()),
                     Insulin = int.Parse(fields[6].Trim()),
                     BloodPressure = int.Parse(fields[7].Trim()),
-                    DiabetesPedigree = double.Parse(fields[8].Trim()),
+                    DiabetesPedigree = float.Parse(fields[8].Trim()),
                     PhysicalActivityHours = int.Parse(fields[9].Trim()),
                 };
 

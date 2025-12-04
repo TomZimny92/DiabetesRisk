@@ -6,11 +6,11 @@
         public required string Name { get; set; }
         public int Age { get; set; }
         public required string Gender { get; set; }
-        public double BMI { get; set; }
+        public float BMI { get; set; }
         public int Glucose { get; set; }
         public int Insulin { get; set; }
         public int BloodPressure { get; set; }
-        public double DiabetesPedigree { get; set; }
+        public float DiabetesPedigree { get; set; }
         public int PhysicalActivityHours { get; set; }
     }
 }
