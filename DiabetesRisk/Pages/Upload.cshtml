@@ -1,0 +1,16 @@
+﻿@page
+@model DiabetesRisk.Pages.UploadModel
+
+<html>
+<head>
+    Upload CSV File
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+
+        <input type="file" accept=".csv" asp-for="Upload" />
+        <input type="submit" />
+    </form>
+</body>
+</html>
+
