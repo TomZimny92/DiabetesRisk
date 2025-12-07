@@ -21,6 +21,11 @@ namespace DiabetesRisk.Pages
                 return;
             }
 
+            if (Path.GetExtension(Upload.FileName).ToLowerInvariant() != ".csv")
+            {
+                ModelState.AddModelError("", "Invalid file type. Please upload a CSV file.");
+                return;
+            }
             PatientRecords.Clear();
 
             using (StreamReader reader = new(Upload.OpenReadStream()))
